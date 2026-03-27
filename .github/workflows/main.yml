@@ -3,37 +3,24 @@ name: Build Android APK
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: # इससे आप मैन्युअली भी रन कर पाएंगे
+  workflow_dispatch:
 
 jobs:
   build:
     name: Build for Android 📱
     runs-on: ubuntu-latest
     steps:
-      # 1. कोड चेकआउट करना (नया वर्शन v4)
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
           lfs: true
 
-      # 2. कैशे (Cache) सेट करना ताकि बिल्ड जल्दी हो
-      - name: Cache Library
-        uses: actions/cache@v3
-        with:
-          path: Library
-          key: Library-Android
-          restore-keys: |
-            Library-
-
-      # 3. Java Setup (Unity के लिए JDK 11 ज़रूरी है)
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '11'
 
-      # 4. Unity Builder (इसमें प्रोजेक्ट सेटिंग्स जोड़ दी हैं)
       - name: Unity Builder
         uses: game-ci/unity-builder@v4
         env:
@@ -42,12 +29,10 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: Android
-          androidKeepStackTrace: true
-          # यहाँ अपनी ऐप का सही पाथ चेक कर लेना
-          buildName: AlphamixGame 
-          androidExportType: 'googleAndroidProject'
+          # यहाँ हमने एरर वाली लाइन्स हटाकर सही फॉर्मेट कर दिया है
+          androidExportType: 'androidPackage'
+          buildName: AlphamixGame
 
-      # 5. APK को स्टोर करना
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
