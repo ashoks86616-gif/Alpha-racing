@@ -29,9 +29,11 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: Android
-          # यहाँ हमने एरर वाली लाइन्स हटाकर सही फॉर्मेट कर दिया है
           androidExportType: 'androidPackage'
           buildName: AlphamixGame
+          # अगर आपका Unity प्रोजेक्ट किसी फोल्डर के अंदर है, तो उसका नाम नीचे लिखें
+          # अगर रूट पर ही है, तो इसे '.' रहने दें
+          projectPath: . 
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
